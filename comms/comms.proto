@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package comms;
+
+option go_package = "github.com/valri11/testgrpsstream/comms";
+
+message CounterReq {
+}
+
+message CounterResp {
+    int32 counter = 1;
+}
+
+service Counter {
+    rpc Count(CounterReq) returns (stream CounterResp) {}
+}
