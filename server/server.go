@@ -9,6 +9,7 @@ import (
 
 	"github.com/valri11/testgrpsstream/comms"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/keepalive"
 	"google.golang.org/grpc/stats"
 )
 
@@ -19,7 +20,10 @@ type counterServer struct {
 func main() {
 	fmt.Println("test Counter server stream")
 
-	srv := grpc.NewServer(grpc.StatsHandler(&Handler{}))
+	srv := grpc.NewServer(
+		grpc.StatsHandler(&Handler{}),
+		grpc.KeepaliveParams(keepalive.ServerParameters{Time: 2 * time.Second, Timeout: 2 * time.Second}),
+	)
 
 	var counterSrv counterServer
 	comms.RegisterCounterServer(srv, &counterSrv)
