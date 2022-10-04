@@ -62,7 +62,7 @@ func (s *counterServer) Count(req *comms.CounterReq, stream comms.Counter_CountS
 			resp := comms.CounterResp{Counter: count}
 			err := stream.Send(&resp)
 			if err != nil {
-				log.Printf("Send err: %v", err)
+				log.Printf("Send err: %v, stream ctx err: %v", err, stream.Context().Err())
 				return err
 			}
 		}
@@ -72,18 +72,18 @@ func (s *counterServer) Count(req *comms.CounterReq, stream comms.Counter_CountS
 type Handler struct {
 }
 
-func (h *Handler) TagRPC(context.Context, *stats.RPCTagInfo) context.Context {
+func (h *Handler) TagRPC(ctx context.Context, s *stats.RPCTagInfo) context.Context {
 	log.Println("TagRPC")
-	return context.Background()
+	return ctx
 }
 
 func (h *Handler) HandleRPC(context.Context, stats.RPCStats) {
 	log.Println("HandleRPC")
 }
 
-func (h *Handler) TagConn(context.Context, *stats.ConnTagInfo) context.Context {
+func (h *Handler) TagConn(ctx context.Context, s *stats.ConnTagInfo) context.Context {
 	log.Println("Tag Conn")
-	return context.Background()
+	return ctx
 }
 
 func (h *Handler) HandleConn(c context.Context, s stats.ConnStats) {
